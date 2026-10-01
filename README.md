@@ -29,15 +29,15 @@ f_low = 0.126
 and then samples a scalar speed from
 
 ```text
-low:  ln(v / (km/s)) ~ Normal(1.87, 0.55)
-high: ln(v / (km/s)) ~ Normal(5.62, 0.71)
+low:  ln(v / (km/s)) ~ Normal(mean=1.87, std=0.55)
+high: ln(v / (km/s)) ~ Normal(mean=5.62, std=0.71)
 ```
 
 Each component is separately normalized and truncated to `0.05 < v / (km/s) < 1000`; rejection occurs within the already chosen component, so truncation does not change `f_low`. These are natural-log parameters for scalar speeds, not Cartesian-component dispersions or Maxwellian parameters. The model has no mass dependence.
 
-The defaults are the marginal posterior central values reported in Table `tab:joint_fit_params` of the manuscript. In particular, `(5.62, 0.71)` are the fitted high-component summaries; `(5.60, 0.68)` are the young-pulsar prior centers. Combining fixed marginal summaries gives a convenient approximation, not a posterior-marginalized distribution or a representative joint-posterior draw. Full uncertainty propagation requires correlated joint-posterior draws, which are outside this small repository.
+The defaults are the marginal posterior medians reported in Table 2 of the manuscript. In particular, `(5.62, 0.71)` are the fitted high-component summaries; `(5.60, 0.68)` are the young-pulsar prior centers. Combining fixed marginal summaries gives a convenient approximation, not a posterior-marginalized distribution or a representative joint-posterior draw. Full uncertainty propagation requires correlated joint-posterior draws, which are outside this small repository.
 
-No kick direction is sampled. A vector implementation would additionally need to assume a direction distribution, commonly isotropic.
+This function returns scalar speeds. The paper assumes isotropic kick directions, which must be sampled separately when constructing kick vectors.
 
 ## License
 
