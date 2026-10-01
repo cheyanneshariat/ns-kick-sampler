@@ -47,8 +47,6 @@ kicks_kms = sample_kick_vectors(10_000, seed=67)
 
 The result has shape `(n, 3)`, with columns `(vx, vy, vz)` in km/s in any chosen orthonormal frame. Vector magnitudes follow the same kick-speed distribution.
 
-## Example distribution
-
 ![Sampled global NS kick-speed distribution](kick_distribution.png)
 
 Histogram of 1,000,000 sampled speeds (`seed=67`), showing probability density per decade in speed.
