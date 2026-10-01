@@ -1,4 +1,4 @@
-"""Sample scalar neutron-star natal-kick speeds."""
+"""Sample neutron-star natal-kick speeds and isotropic vectors."""
 
 import operator
 
@@ -35,3 +35,16 @@ def sample_kick_speeds(n, seed=None):
             remaining = remaining[~accepted]
 
     return speeds
+
+
+def sample_kick_vectors(n, seed=None):
+    """Return an (n, 3) array of isotropic (vx, vy, vz) kicks in km/s."""
+    rng = np.random.default_rng(seed)
+    speeds = sample_kick_speeds(n, seed=rng)
+    cos_theta = rng.uniform(-1.0, 1.0, speeds.size)
+    phi = rng.uniform(0.0, 2.0 * np.pi, speeds.size)
+    sin_theta = np.sqrt(1.0 - cos_theta**2)
+    directions = np.column_stack(
+        (sin_theta * np.cos(phi), sin_theta * np.sin(phi), cos_theta)
+    )
+    return speeds[:, None] * directions

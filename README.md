@@ -1,6 +1,6 @@
 # NS kick sampler
 
-A minimal NumPy function for sampling scalar neutron-star natal-kick speeds from the global, all-NS-birth distribution inferred in *A concordance model of neutron star kicks* by Cheyanne Shariat, Kareem El-Badry, and Smadar Naoz.
+A simple NumPy function for sampling neutron-star natal-kick speeds from the global NS kick distribution inferred in *A concordance model of neutron star kicks* by Cheyanne Shariat, Kareem El-Badry, and Smadar Naoz.
 
 ## Use
 
@@ -13,10 +13,10 @@ python -m pip install numpy
 ```python
 from ns_kick_sampler import sample_kick_speeds
 
-speeds_kms = sample_kick_speeds(10_000, seed=7)
+speeds_kms = sample_kick_speeds(10_000, seed=67)
 ```
 
-`seed` is passed to `numpy.random.default_rng`. The function returns a one-dimensional NumPy array; `n=0` returns an empty array.
+`seed` is passed to `numpy.random.default_rng`. The function returns a 1D NumPy array; `n=0` returns an empty array.
 
 ## Conventions and provenance
 
@@ -33,11 +33,32 @@ low:  ln(v / (km/s)) ~ Normal(mean=1.87, std=0.55)
 high: ln(v / (km/s)) ~ Normal(mean=5.62, std=0.71)
 ```
 
-Each component is separately normalized and truncated to `0.05 < v / (km/s) < 1000`; rejection occurs within the already chosen component, so truncation does not change `f_low`. These are natural-log parameters for scalar speeds, not Cartesian-component dispersions or Maxwellian parameters. The model has no mass dependence.
+Each component is separately normalized and truncated to `0.05 < v / (km/s) < 1000`. 
 
-The defaults are the marginal posterior medians reported in Table 2 of the manuscript. In particular, `(5.62, 0.71)` are the fitted high-component summaries; `(5.60, 0.68)` are the young-pulsar prior centers. Combining fixed marginal summaries gives a convenient approximation, not a posterior-marginalized distribution or a representative joint-posterior draw. Full uncertainty propagation requires correlated joint-posterior draws, which are outside this small repository.
+The sampler uses the posterior medians reported in Table 2 of our paper. The high-velocity component is constrained by the young-pulsar distribution of [Disberg & Mandel (2025)](https://arxiv.org/abs/2505.22102). It samples kick speeds at fixed parameter values.
 
-This function returns scalar speeds. The paper assumes isotropic kick directions, which must be sampled separately when constructing kick vectors.
+For 3D kick vectors with isotropic directions:
+
+```python
+from ns_kick_sampler import sample_kick_vectors
+
+kicks_kms = sample_kick_vectors(10_000, seed=67)
+```
+
+The result has shape `(n, 3)`, with columns `(vx, vy, vz)` in km/s in any chosen orthonormal frame. Vector magnitudes follow the same kick-speed distribution.
+
+## Example distribution
+
+![Sampled global NS kick-speed distribution](kick_distribution.png)
+
+Histogram of 1,000,000 sampled speeds (`seed=67`), showing probability density per decade in speed.
+
+To regenerate the PNG:
+
+```bash
+python3 -m pip install matplotlib
+python3 plot_kick_distribution.py
+```
 
 ## License
 
